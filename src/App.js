@@ -1,24 +1,74 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+
+import React, { useContext } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Destinations from "./pages/Destinations";
+import DestinationDetailPage from "./pages/DestinationDetailPage";
+import BookingPage from "./pages/BookingPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AuthContext from "./authContext";
 
 function App() {
+  const { isAuthenticated } = useContext(AuthContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div
+        className=" App relative h-screen bg-cover bg-center"
+        style={{ backgroundImage: "url('/background.jpeg')" }}
+      >
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/destinations"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Destinations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/destinations/:id"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <DestinationDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/booking/:destinationId"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <BookingPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
